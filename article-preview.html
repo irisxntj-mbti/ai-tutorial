@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 编程 — 不会代码也能做</title>
+  <style>
+    :root {
+      --color-primary: #7c5cad;
+      --color-primary-bg: #f4f0fb;
+      --color-primary-light: #e8e0f7;
+      --color-text-primary: #303133;
+      --color-text-regular: #606266;
+      --color-text-secondary: #909399;
+      --color-bg-page: #f5f7fa;
+      --color-bg-card: #ffffff;
+      --color-border: #e4e7ed;
+      --color-border-light: #f2f3f5;
+      --color-success: #67c23a;
+      --color-danger: #f56c6c;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --text-sm: 12px;
+      --text-base: 14px;
+      --text-md: 16px;
+      --text-lg: 20px;
+      --text-xl: 24px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --radius-sm: 4px;
+      --radius-base: 8px;
+      --radius-lg: 10px;
+      --shadow-sm: 0 1px 6px rgba(0,0,0,0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text-primary);
+      background: var(--color-bg-page);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .article {
+      max-width: 420px;
+      margin: 0 auto;
+      background: var(--color-bg-card);
+    }
+
+    /* 头图区域 */
+    .hero {
+      background: linear-gradient(135deg, #2d1b4e, #4a2d7a, #7c5cad);
+      padding: var(--space-10) var(--space-6);
+      text-align: center;
+      color: #fff;
+    }
+
+    .hero__title {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: var(--space-3);
+    }
+
+    .hero__highlight {
+      color: #fbbf24;
+    }
+
+    .hero__subtitle {
+      font-size: var(--text-md);
+      opacity: 0.8;
+    }
+
+    /* 正文区 */
+    .content {
+      padding: var(--space-6);
+    }
+
+    .content p {
+      font-size: 15px;
+      color: var(--color-text-regular);
+      margin-bottom: var(--space-4);
+      line-height: 2;
+    }
+
+    .content p.lead {
+      color: var(--color-text-secondary);
+      font-size: var(--text-base);
+      border-left: 3px solid var(--color-primary);
+      padding-left: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .content strong {
+      color: var(--color-text-primary);
+    }
+
+    .content .emphasis {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* 分隔线 */
+    .divider {
+      width: 40px;
+      height: 3px;
+      background: var(--color-primary);
+      border-radius: 2px;
+      margin: var(--space-8) 0 var(--space-6);
+    }
+
+    /* 标题 */
+    h2 {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-5);
+    }
+
+    /* 证言卡片 */
+    .testimonial {
+      background: var(--color-bg-card);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin-bottom: var(--space-4);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .testimonial__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+
+    .testimonial__avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-primary-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .testimonial__name {
+      font-size: var(--text-base);
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .testimonial__role {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .testimonial__quote {
+      font-size: var(--text-base);
+      color: var(--color-text-regular);
+      line-height: 1.8;
+      padding-left: var(--space-4);
+      border-left: 2px solid var(--color-primary-light);
+    }
+
+    /* 厨房比喻 */
+    .metaphor-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-bottom: var(--space-6);
+      border-radius: var(--radius-base);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    .metaphor-table th {
+      background: var(--color-primary);
+      color: #fff;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      padding: var(--space-3) var(--space-4);
+      text-align: left;
+    }
+
+    .metaphor-table td {
+      font-size: var(--text-base);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border-light);
+      color: var(--color-text-regular);
+    }
+
+    .metaphor-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .metaphor-table td:first-child {
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+
+    /* 核心金句 */
+    .key-message {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-primary);
+      padding: var(--space-6);
+      background: var(--color-primary-bg);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-6);
+      line-height: 1.6;
+    }
+
+    /* 对比卡片 */
+    .comparison {
+      display: flex;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+
+    .comparison__card {
+      flex: 1;
+      padding: var(--space-5);
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+
+    .comparison__card--old {
+      background: #fafafa;
+      border: 1px solid var(--color-border);
+    }
+
+    .comparison__card--new {
+      background: var(--color-primary-bg);
+      border: 1px solid var(--color-primary-light);
+    }
+
+    .comparison__icon {
+      font-size: 28px;
+      margin-bottom: var(--space-2);
+    }
+
+    .comparison__title {
+      font-size: var(--text-base);
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .comparison__time {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .comparison__card--old .comparison__time {
+      color: var(--color-text-secondary);
+    }
+
+    .comparison__card--new .comparison__time {
+      color: var(--color-primary);
+    }
+
+    .comparison__desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    /* 步骤 */
+    .step {
+      display: flex;
+      gap: var(--space-4);
+      margin-bottom: var(--space-5);
+      align-items: flex-start;
+    }
+
+    .step__num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step__title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 2px;
+    }
+
+    .step__desc {
+      font-size: var(--text-base);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .step__keyword {
+      display: inline-block;
+      background: var(--color-primary-bg);
+      color: var(--color-primary);
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+    }
+
+    /* 清单 */
+    .checklist {
+      margin-bottom: var(--space-6);
+    }
+
+    .checklist__item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      font-size: var(--text-base);
+      color: var(--color-text-regular);
+    }
+
+    .checklist__check {
+      color: var(--color-success);
+      font-weight: 700;
+      font-size: var(--text-md);
+      flex-shrink: 0;
+    }
+
+    /* 尾部 */
+    .footer {
+      text-align: center;
+      padding: var(--space-8) var(--space-6);
+      background: linear-gradient(135deg, #2d1b4e, #4a2d7a);
+      color: #fff;
+    }
+
+    .footer__brand {
+      font-size: var(--text-md);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .footer__slogan {
+      font-size: var(--text-base);
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+<div class="article">
+
+  <!-- 头图 -->
+  <div class="hero">
+    <div class="hero__title">
+      被代码挡在门外？<br>
+      <span class="hero__highlight">那扇门根本不存在</span>
+    </div>
+    <div class="hero__subtitle">一个文科女生的 AI 编程真相</div>
+  </div>
+
+  <div class="content">
+
+    <!-- 第一段：制造焦虑的信息环境 -->
+    <p>
+      你一定刷到过这样的内容——
+    </p>
+
+    <p>
+      「天塌了，AI 编程彻底颠覆生产力」<br>
+      「不会用这个工具的人，马上就要被淘汰了」<br>
+      「全自动写代码，程序员要失业了」
+    </p>
+
+    <p>
+      铺天盖地。每一条都在告诉你：<strong>一场巨变已经发生，你不能掉队。</strong>
+    </p>
+
+    <p>
+      你心动了。你点进去看。
+    </p>
+
+    <p>
+      然后你看到的是——终端、命令行、Python 环境配置、npm install、API Key……博主们一边说着「零基础也能学」，一边贴出一屏幕你看不懂的代码。
+    </p>
+
+    <p>
+      <strong>你的热情，在 30 秒内被浇灭了。</strong>
+    </p>
+
+    <div class="divider"></div>
+
+    <!-- 第二段：信息不对称的痛 -->
+    <h2>被挡在门外的人</h2>
+
+    <p>
+      我见过太多这样的女孩子。
+    </p>
+
+    <p>
+      文科毕业，做运营、做设计、做自媒体、做全职妈妈。她们聪明、敏锐、学东西快——但每次 AI 的风口来了，她们永远是那个<strong>「看起来离得最近，实际上被挡得最远」</strong>的人。
+    </p>
+
+    <p>
+      不是因为笨。是因为那些博主，有意无意地，把一层<strong>「技术门槛」</strong>架在了中间。好像不会写代码，就注定只能在门外张望。
+    </p>
+
+    <p>
+      我曾经也是她们中的一个。
+    </p>
+
+    <p>
+      我看着那些教程，心想：一行代码都看不懂，是不是意味着我永远赶不上这波红利了？除非我从头啃 Python、学编程——可那要花多久？半年？一年？等我学会了，风口早过了。
+    </p>
+
+    <p>
+      <span class="emphasis">后来我发现，这是一个天大的误解。</span>
+    </p>
+
+    <p>
+      事情的转折，来自一个特别小的事。
+    </p>
+
+    <p>
+      我的电脑屏幕闪了很久了，时不时闪一下，烦得要命。我一直想着找个时间去电脑维修店看看，但总是拖着没去。
+    </p>
+
+    <p>
+      有一天，我抱着试试看的心态，小心翼翼地在 Claude Code 里打了一句话：
+    </p>
+
+    <p class="lead">「帮我查一下电脑为什么屏闪，帮我修复这个问题。」</p>
+
+    <p>
+      然后，<strong>它就自己动了。</strong>
+    </p>
+
+    <p>
+      它自动接管了我的电脑，一通排查——查驱动、查设置、查系统日志——我就在旁边看着，什么都没做。几分钟后，它告诉我问题出在哪里，然后自己修好了。
+    </p>
+
+    <p>
+      <strong>屏闪彻底消失了。</strong>困扰我好几个月的问题，我只说了一句话。
+    </p>
+
+    <p>
+      那一刻我突然意识到：这个东西，<span class="emphasis">根本不是什么编程工具。它就是一个听得懂人话的万能助手。</span>
+    </p>
+
+    <div class="divider"></div>
+
+    <!-- 第三段：真相揭示 -->
+    <h2>真正的答案</h2>
+
+    <p>
+      Claude Code——就是那个被吹上天的 AI 编程工具——<strong>根本不需要你懂一行代码。</strong>
+    </p>
+
+    <p>
+      不是「学一点基础就够了」，不是「降低了门槛」。是<strong>完全不需要。零。一行都不用。</strong>
+    </p>
+
+    <p>
+      你只需要会说中文，会描述你想要什么，它就能帮你做出来。修电脑、做网页、做工具、做小程序、做数据看板——你说，它做。
+    </p>
+
+    <p>
+      听起来太好了？让我用一个比喻讲清楚：
+    </p>
+
+    <!-- 厨房比喻 -->
+    <table class="metaphor-table">
+      <tr>
+        <th>厨房里</th>
+        <th>对应工具</th>
+        <th>你需要知道的</th>
+      </tr>
+      <tr>
+        <td>&#x1F373; 厨房</td>
+        <td>VS Code</td>
+        <td>做菜的地方，打开就行</td>
+      </tr>
+      <tr>
+        <td>&#x1F9D1;&#x200D;&#x1F373; 厨师</td>
+        <td>Claude Code</td>
+        <td>帮你做菜的人，你指挥它</td>
+      </tr>
+      <tr>
+        <td>&#x1F9E0; 大脑</td>
+        <td>AI 大模型</td>
+        <td>厨师的手艺来源，你不用管</td>
+      </tr>
+    </table>
+
+    <div class="key-message">
+      你不需要学做菜<br>你只需要<strong>会点菜</strong>
+    </div>
+
+    <p>
+      传统编程就像自己学炒菜：买菜刀、背菜谱、练刀工——半年才能做出一盘像样的菜。
+    </p>
+
+    <p>
+      AI 编程就像走进一家餐厅：你告诉厨师「我想吃一道糖醋排骨，甜一点，少放醋」——3 分钟，菜上桌。
+    </p>
+
+    <div class="comparison">
+      <div class="comparison__card comparison__card--old">
+        <div class="comparison__icon">&#x1F4DA;</div>
+        <div class="comparison__title">传统学编程</div>
+        <div class="comparison__time">6 个月入门</div>
+        <div class="comparison__desc">背语法、写代码<br>调 Bug、查文档</div>
+      </div>
+      <div class="comparison__card comparison__card--new">
+        <div class="comparison__icon">&#x2728;</div>
+        <div class="comparison__title">AI 编程</div>
+        <div class="comparison__time">3 分钟上手</div>
+        <div class="comparison__desc">说需求、看结果<br>微调、完成</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 案例 -->
+    <h2>她们已经做到了</h2>
+
+    <div class="testimonial">
+      <div class="testimonial__header">
+        <div class="testimonial__avatar">&#x1F469;</div>
+        <div>
+          <div class="testimonial__name">零基础宝妈</div>
+          <div class="testimonial__role">全职妈妈</div>
+        </div>
+      </div>
+      <div class="testimonial__quote">
+        用 AI 做了孩子的生日邀请函，发到朋友圈获赞无数，闺蜜们都来问我怎么做的！
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <div class="testimonial__header">
+        <div class="testimonial__avatar">&#x1F469;&#x200D;&#x1F3A8;</div>
+        <div>
+          <div class="testimonial__name">设计师小林</div>
+          <div class="testimonial__role">UI 设计师</div>
+        </div>
+      </div>
+      <div class="testimonial__quote">
+        3 分钟做出产品原型图，老板以为我加了通宵班。效率直接翻倍！
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <div class="testimonial__header">
+        <div class="testimonial__avatar">&#x1F4F1;</div>
+        <div>
+          <div class="testimonial__name">自媒体博主</div>
+          <div class="testimonial__role">小红书创作者</div>
+        </div>
+      </div>
+      <div class="testimonial__quote">
+        让 AI 帮我做了粉丝数据看板，再也不用手动统计。把时间省下来做内容！
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- CTA -->
+    <h2>想自己试试？</h2>
+
+    <p>我们帮你 3 步搞定，不用配环境、不用学代码：</p>
+
+    <div class="step">
+      <div class="step__num">1</div>
+      <div>
+        <div class="step__title">关注公众号「拥抱智序」</div>
+        <div class="step__desc">你已经在了，很棒！</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step__num">2</div>
+      <div>
+        <div class="step__title">领取一键安装包</div>
+        <div class="step__desc">VS Code + Claude Code，一键安装。<br>聊天框回复 <span class="step__keyword">安装包</span> 即可领取</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step__num">3</div>
+      <div>
+        <div class="step__title">跟着教程动手做</div>
+        <div class="step__desc">手把手带你完成第一个作品，从零到成品只需 3 分钟。</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>你会得到什么？</h2>
+
+    <div class="checklist">
+      <div class="checklist__item">
+        <span class="checklist__check">&#10003;</span>
+        <span>零基础友好，不需要任何编程经验</span>
+      </div>
+      <div class="checklist__item">
+        <span class="checklist__check">&#10003;</span>
+        <span>一键安装包，省去所有配置步骤</span>
+      </div>
+      <div class="checklist__item">
+        <span class="checklist__check">&#10003;</span>
+        <span>手把手教程，跟着做就能出成果</span>
+      </div>
+      <div class="checklist__item">
+        <span class="checklist__check">&#10003;</span>
+        <span>有问题随时问，学不会包教</span>
+      </div>
+    </div>
+
+    <p>
+      那些博主不会告诉你的真相是：<strong>这扇门，从来就不需要钥匙。</strong>
+    </p>
+
+    <p>
+      推开它，你只需要会说话。
+    </p>
+
+  </div><!-- .content -->
+
+  <!-- 尾部 -->
+  <div class="footer">
+    <div class="footer__brand">拥抱智序 &middot; XNTJ</div>
+    <div class="footer__slogan">用 AI 放大你的天赋</div>
+  </div>
+
+</div><!-- .article -->
+
+</body>
+</html>

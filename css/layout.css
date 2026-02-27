@@ -1,236 +1,200 @@
 /* ============================================
-   Layout — Reset, Structure, Sections
+   Layout — 页面结构 & 响应式
    ============================================ */
 
-/* ---- Reset ---- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* Reset */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 html {
+  font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
 }
 
 body {
   font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
-  color: var(--color-text-primary);
-  background-color: var(--color-bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-gray-800);
+  background: var(--color-white);
+  line-height: 1.6;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+/* Page container — 移动端优先 */
+.page {
+  max-width: 420px;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-ul, ol {
-  list-style: none;
-}
-
-/* ---- Section ---- */
+/* Section 通用 */
 .section {
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-12) var(--section-padding-x);
-  position: relative;
-}
-
-.section--alt {
-  background-color: var(--color-bg-section);
-}
-
-/* ---- Container ---- */
-.container {
-  max-width: var(--container-max-width);
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-}
-
-/* ---- Section Header ---- */
-.section-header {
-  text-align: center;
-  margin-bottom: var(--space-10);
+  padding: var(--space-12) var(--space-6);
 }
 
 .section-title {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  line-height: var(--line-height-tight);
-  margin-bottom: var(--space-3);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-gray-900);
+  text-align: center;
+  margin-bottom: var(--space-2);
 }
 
 .section-subtitle {
-  font-size: var(--font-size-base);
-  color: var(--color-text-regular);
-  line-height: var(--line-height-normal);
-}
-
-/* ---- Hero Section Layout ---- */
-.hero {
-  padding-top: var(--space-16);
-  padding-bottom: var(--space-12);
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
   text-align: center;
-  background: linear-gradient(
-    180deg,
-    var(--color-bg) 0%,
-    var(--color-bg-section) 100%
-  );
+  margin-bottom: var(--space-8);
 }
 
-.hero__title {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  line-height: var(--line-height-tight);
-  margin-bottom: var(--space-3);
+/* Hero Section */
+.hero {
+  background: var(--gradient-hero);
+  padding: var(--space-16) var(--space-6) var(--space-12);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.hero__subtitle {
-  font-size: var(--font-size-lg);
-  color: var(--color-text-regular);
-  margin-bottom: var(--space-10);
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -30%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
 }
 
-.hero__title .highlight {
+.hero-logo {
+  width: 90px;
+  height: auto;
+  margin-bottom: var(--space-6);
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-4);
+  background: var(--color-white);
+  border: 1px solid var(--color-primary-light);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
   color: var(--color-primary);
+  font-weight: 500;
+  margin-bottom: var(--space-6);
 }
 
-/* ---- Cards List ---- */
-.cards-list {
+.hero-title {
+  font-size: var(--font-size-4xl);
+  font-weight: 800;
+  color: var(--color-gray-900);
+  line-height: 1.2;
+  margin-bottom: var(--space-4);
+}
+
+.hero-title span {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-slogan {
+  display: inline-block;
+  padding: var(--space-2) var(--space-5);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border-radius: var(--radius-full);
+  margin-top: var(--space-4);
+}
+
+.hero-desc {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-600);
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* Service Types Section */
+.services {
+  background: var(--color-white);
+}
+
+.service-grid {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  margin-bottom: var(--space-10);
 }
 
-/* ---- Comparison Grid ---- */
-.comparison-grid {
+/* Cases Section */
+.cases {
+  background: var(--color-gray-50);
+}
+
+.case-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* Process Section */
+.process {
+  background: var(--color-white);
+}
+
+.process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  position: relative;
+}
+
+/* Stats Section */
+.stats {
+  background: var(--gradient-stats);
+  padding: var(--space-12) var(--space-6);
+}
+
+.stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+  gap: var(--space-6);
 }
 
-/* ---- Steps List ---- */
-.steps-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  margin-bottom: var(--space-10);
-}
-
-/* ---- Testimonials List ---- */
-.testimonials-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  margin-bottom: var(--space-8);
-}
-
-/* ---- CTA Section Layout ---- */
-.cta-section {
-  text-align: center;
-}
-
-.cta-section .section-header {
-  margin-bottom: var(--space-8);
-}
-
-/* ---- Footer ---- */
+/* Footer */
 .footer {
+  background: var(--color-gray-900);
+  padding: var(--space-10) var(--space-6) var(--space-8);
   text-align: center;
-  padding: var(--space-8) var(--section-padding-x);
-  border-top: 1px solid var(--color-border);
 }
 
-.footer__brand {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-primary);
-  margin-bottom: var(--space-1);
-}
-
-.footer__slogan {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-/* ---- Fade-in Animation ---- */
+/* Fade-in animation */
 .fade-in {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(20px);
   transition: opacity var(--transition-slow), transform var(--transition-slow);
 }
 
-.fade-in.is-visible {
+.fade-in.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* ---- Staggered children ---- */
-.fade-in-children > * {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity var(--transition-base), transform var(--transition-base);
-}
-
-.fade-in-children.is-visible > *:nth-child(1) { transition-delay: 0ms; }
-.fade-in-children.is-visible > *:nth-child(2) { transition-delay: 120ms; }
-.fade-in-children.is-visible > *:nth-child(3) { transition-delay: 240ms; }
-.fade-in-children.is-visible > *:nth-child(4) { transition-delay: 360ms; }
-
-.fade-in-children.is-visible > * {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ---- Responsive ---- */
-@media screen and (max-width: 360px) {
-  :root {
-    --section-padding-x: 16px;
+/* Responsive — tablets */
+@media (min-width: 480px) {
+  .page {
+    max-width: 480px;
   }
 
-  .hero__title {
-    font-size: var(--font-size-2xl);
-  }
-
-  .section-title {
-    font-size: var(--font-size-xl);
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .section {
-    padding-top: var(--space-20);
-    padding-bottom: var(--space-20);
-  }
-
-  .hero {
-    padding-top: var(--space-20);
-  }
-
-  .hero__title {
-    font-size: var(--font-size-4xl);
+  .service-grid {
+    flex-direction: row;
   }
 }

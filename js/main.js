@@ -1,128 +1,126 @@
 /* ============================================
-   Main JS — AI Tutorial Showcase
-   Intersection Observer animations + utilities
+   Main JS — 视频轮播 + 滚动淡入动画
    ============================================ */
 
-(function () {
-  'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+  initCarousels();
+  initScrollAnimations();
+  initAutoStopOnScroll();
+});
 
-  /* ---- Intersection Observer for fade-in ---- */
-  function initScrollAnimations() {
-    var targets = document.querySelectorAll('.fade-in, .fade-in-children');
+/* ---- Video Carousel ---- */
+function initCarousels() {
+  document.querySelectorAll('.carousel').forEach(carousel => {
+    const track = carousel.querySelector('.carousel-track');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const dots = carousel.parentElement.querySelectorAll('.carousel-dot');
+    let current = 0;
+    let startX = 0;
+    let deltaX = 0;
+    let isDragging = false;
 
-    if (!targets.length) return;
-
-    if (!('IntersectionObserver' in window)) {
-      /* Fallback: show everything immediately */
-      targets.forEach(function (el) {
-        el.classList.add('is-visible');
-      });
-      return;
+    function goTo(index) {
+      if (index < 0 || index >= slides.length) return;
+      pauseAllVideos(carousel);
+      current = index;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
     }
 
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px',
+    // Touch events
+    track.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+      track.style.transition = 'none';
+    }, { passive: true });
+
+    track.addEventListener('touchmove', e => {
+      if (!isDragging) return;
+      deltaX = e.touches[0].clientX - startX;
+      const offset = -current * 100 + (deltaX / track.offsetWidth) * 100;
+      track.style.transform = `translateX(${offset}%)`;
+    }, { passive: true });
+
+    track.addEventListener('touchend', () => {
+      isDragging = false;
+      track.style.transition = '';
+      if (Math.abs(deltaX) > 50) {
+        goTo(deltaX > 0 ? current - 1 : current + 1);
+      } else {
+        goTo(current);
       }
-    );
-
-    targets.forEach(function (el) {
-      observer.observe(el);
+      deltaX = 0;
     });
-  }
 
-  /* ---- Smooth scroll for anchor links ---- */
-  function initSmoothScroll() {
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest('a[href^="#"]');
-      if (!link) return;
-
-      var targetId = link.getAttribute('href');
-      if (targetId === '#') return;
-
-      var targetEl = document.querySelector(targetId);
-      if (!targetEl) return;
-
-      e.preventDefault();
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Dot click
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => goTo(i));
     });
-  }
 
-  /* ---- Scroll indicator click ---- */
-  function initScrollIndicator() {
-    var indicator = document.querySelector('.scroll-indicator');
-    if (!indicator) return;
+    // Click anywhere on slide to toggle play/pause
+    carousel.querySelectorAll('.carousel-slide').forEach(slide => {
+      const video = slide.querySelector('video');
+      const btn = slide.querySelector('.play-btn');
+      if (!video || !btn) return;
 
-    indicator.addEventListener('click', function () {
-      var nextSection = document.querySelector('#how-it-works');
-      if (nextSection) {
-        nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  }
-
-  /* ---- Lazy image loading preparation ---- */
-  function initLazyImages() {
-    var lazyImages = document.querySelectorAll('img[data-src]');
-
-    if (!lazyImages.length) return;
-
-    if (!('IntersectionObserver' in window)) {
-      lazyImages.forEach(function (img) {
-        img.src = img.dataset.src;
+      slide.addEventListener('click', () => {
+        if (video.paused) {
+          pauseAllVideos(carousel);
+          video.play();
+          btn.classList.add('hidden');
+        } else {
+          video.pause();
+          btn.classList.remove('hidden');
+        }
       });
-      return;
-    }
 
-    var imageObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            var img = entry.target;
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-            img.classList.add('is-loaded');
-            imageObserver.unobserve(img);
-          }
-        });
-      },
-      {
-        rootMargin: '200px 0px',
-      }
-    );
-
-    lazyImages.forEach(function (img) {
-      imageObserver.observe(img);
+      video.addEventListener('ended', () => {
+        btn.classList.remove('hidden');
+      });
     });
-  }
+  });
+}
 
-  /* ---- Prevent 300ms tap delay on mobile ---- */
-  function initTouchOptimizations() {
-    /* Modern browsers handle this via viewport meta, but just in case */
-    document.addEventListener('touchstart', function () {}, { passive: true });
-  }
+function pauseAllVideos(container) {
+  container.querySelectorAll('video').forEach(v => {
+    v.pause();
+    v.currentTime = 0;
+  });
+  container.querySelectorAll('.play-btn').forEach(b => b.classList.remove('hidden'));
+}
 
-  /* ---- Initialize everything on DOM ready ---- */
-  function init() {
-    initScrollAnimations();
-    initSmoothScroll();
-    initScrollIndicator();
-    initLazyImages();
-    initTouchOptimizations();
-  }
+/* ---- Auto-stop video when scrolled out of view ---- */
+function initAutoStopOnScroll() {
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          const carousel = entry.target.closest('.carousel');
+          if (carousel) pauseAllVideos(carousel);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-})();
+  document.querySelectorAll('.carousel-slide video').forEach(v => {
+    observer.observe(v);
+  });
+}
+
+/* ---- Scroll Fade-in Animation ---- */
+function initScrollAnimations() {
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+}
